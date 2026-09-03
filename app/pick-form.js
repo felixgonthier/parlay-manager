@@ -7,8 +7,9 @@ const STORAGE_KEY = 'wp_roster_id';
 const POSITION_ORDER = ['RB', 'WR', 'TE', 'QB'];
 
 function label(p) {
+  const game = [p.team, p.opponent].filter(Boolean).join(' ');
   return [
-    `${p.name}${p.team ? ` (${p.team})` : ''}`,
+    `${p.name}${game ? ` (${game})` : ''}`,
     p.starter ? 'starter' : null,
     p.status || null,
   ]
@@ -107,10 +108,15 @@ export default function PickForm({ teams, picks: initialPicks, locked }) {
       )}
 
       <label htmlFor="player">Player to score an anytime TD</label>
+      {team && !groups.length ? (
+        <div className="msg err">
+          None of your players are on the Sunday slate this week.
+        </div>
+      ) : null}
       <select
         id="player"
         value={playerId}
-        disabled={!team}
+        disabled={!team || !groups.length}
         onChange={(e) => setPlayerId(e.target.value)}
       >
         <option value="">{team ? 'Select a player…' : 'Pick your team first'}</option>

@@ -19,7 +19,7 @@ export default async function Admin() {
 
   const state = await getState();
   const [teams, picks] = await Promise.all([
-    getLeagueTeams(),
+    getLeagueTeams(state),
     getPicks(state.season, state.week),
   ]);
 

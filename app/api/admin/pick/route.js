@@ -22,7 +22,7 @@ export async function POST(request) {
     return Response.json({ ok: true, picks });
   }
 
-  const teams = await getLeagueTeams();
+  const teams = await getLeagueTeams(state);
   const team = teams.find((t) => String(t.rosterId) === String(rosterId));
   const player = team?.players.find((p) => p.id === String(playerId));
   if (!player) {

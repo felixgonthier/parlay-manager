@@ -13,7 +13,8 @@ export async function POST(request) {
     return Response.json({ error: 'Pick a team and a player' }, { status: 400 });
   }
 
-  const [state, teams] = await Promise.all([getState(), getLeagueTeams()]);
+  const state = await getState();
+  const teams = await getLeagueTeams(state);
   const team = teams.find((t) => String(t.rosterId) === String(rosterId));
   const player = team?.players.find((p) => p.id === String(playerId));
   if (!player) {

@@ -5,7 +5,8 @@ import { useState } from 'react';
 const POSITION_ORDER = ['RB', 'WR', 'TE', 'QB'];
 
 function playerLabel(p) {
-  return `${p.name}${p.team ? ` (${p.team})` : ''}${p.starter ? ' • starter' : ''}`;
+  const game = [p.team, p.opponent].filter(Boolean).join(' ');
+  return `${p.name}${game ? ` (${game})` : ''}${p.starter ? ' • starter' : ''}`;
 }
 
 function groupPlayers(players) {

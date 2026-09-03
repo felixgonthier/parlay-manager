@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 export default async function Home() {
   const state = await getState();
   const [teams, picks] = await Promise.all([
-    getLeagueTeams(),
+    getLeagueTeams(state),
     getPicks(state.season, state.week),
   ]);
 
@@ -18,8 +18,8 @@ export default async function Home() {
       <h1>Week {state.week} — pick your TD scorer</h1>
       <p className="sub">
         One player from your roster who you think scores a rushing or receiving TD —
-        QBs count too, on a rushing TD. They all go into one parlay.{' '}
-        {submitted}/{teams.length} teams in.
+        QBs count too, on a rushing TD. Only players in Sunday&apos;s games are
+        listed. They all go into one parlay. {submitted}/{teams.length} teams in.
       </p>
 
       <PickForm teams={teams} picks={picks} locked={isLocked()} />

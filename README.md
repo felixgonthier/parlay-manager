@@ -47,8 +47,9 @@ cp .env.example .env.local   # set ADMIN_PASSWORD
 npm run dev
 ```
 
-Without Redis env vars, picks are held in memory so the app still runs — they
-vanish on restart. Provision Redis before you deploy.
+Without Redis env vars, picks are written to a gitignored `.picks.dev.json` so
+local dev works — delete that file to reset. Provision Redis before you deploy;
+production never touches the file (Vercel's filesystem is read-only).
 
 ## Admin overrides
 

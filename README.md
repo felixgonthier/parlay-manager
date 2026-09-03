@@ -25,8 +25,9 @@ empty dropdown.
 
 ## Deploy on Vercel
 
-1. **Storage → Create Database → Upstash for Redis** (free tier) on the Vercel
-   project and connect it. That injects the Redis env vars automatically.
+1. **Storage → Create Database** on the Vercel project, pick any Redis (Redis
+   Cloud's free 30MB tier is plenty), then **Connect to Project**. That injects
+   `REDIS_URL` automatically.
 2. **Settings → Environment Variables**:
 
    | Variable | Value |
@@ -34,6 +35,8 @@ empty dropdown.
    | `SLEEPER_LEAGUE_ID` | `1389734249816428544` |
    | `ADMIN_PASSWORD` | only you know this; it unlocks `/admin` |
    | `LOCK_SUNDAY_HOUR_ET` | optional, e.g. `13` — picks close Sunday 1pm ET |
+
+   `REDIS_URL` comes from step 1 — don't set it by hand.
 
 3. Redeploy, then share the URL in the Sleeper chat.
 
@@ -68,7 +71,9 @@ only bet real submissions). Overrides work even when picks are locked.
   already US-local, so a Sunday nighter reads as Sunday) and is cached 6h.
   `suggestPick()` is the fallback: the team's best-ranked starting RB/WR/TE
   that is on the slate.
-- `lib/store.js` — one Redis hash per week (`picks:<season>:<week>`), keyed by
+- `lib/store.js` — `node-redis` over a plain `redis://` URL, so any Redis
+  works (Redis Cloud, Upstash, self-hosted). One connection is cached per
+  server process. Data is one hash per week (`picks:<season>:<week>`), keyed by
   Sleeper roster id, so re-submitting just overwrites.
 - `lib/auth.js` — one shared admin password in a cookie. Owners need no login;
   they identify themselves by choosing their team, which is remembered in

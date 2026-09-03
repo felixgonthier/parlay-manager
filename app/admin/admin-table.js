@@ -60,7 +60,7 @@ export default function AdminTable({ teams, picks: initialPicks }) {
       setPicks(data.picks);
       setDrafts((d) => ({ ...d, [rosterId]: '' }));
     } else {
-      setError(data.error || 'Could not save that pick');
+      setError(data.error || `Could not save that pick (HTTP ${res.status})`);
     }
   }
 
@@ -93,19 +93,19 @@ export default function AdminTable({ teams, picks: initialPicks }) {
             const busy = busyRoster === id;
             return (
               <tr key={id}>
-                <td>
-                  {r.team.teamName}
+                <td>{r.team.teamName}</td>
+                <td className="pick">
+                  <span className={r.source === 'auto' ? 'muted' : undefined}>
+                    {r.name || '—'} {r.nflTeam}
+                  </span>
                   <br />
-                  <span className="muted">
+                  <span className={`badge ${r.source}`}>
                     {r.source === 'auto'
-                      ? 'no submission'
+                      ? 'auto'
                       : r.source === 'admin'
                         ? 'set by you'
                         : 'submitted'}
                   </span>
-                </td>
-                <td className="pick">
-                  {r.name || '—'} <span className="muted">{r.nflTeam}</span>
                 </td>
                 <td>
                   <div className="row-actions">

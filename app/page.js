@@ -18,8 +18,9 @@ export default async function Home() {
       <h1>Week {state.week} — pick your TD scorer</h1>
       <p className="sub">
         One player from your roster who you think scores a rushing or receiving TD —
-        QBs count too, on a rushing TD. Only players in Sunday&apos;s games are
-        listed. They all go into one parlay. {submitted}/{teams.length} teams in.
+        QBs count too, on a rushing TD. Only players in the Sunday and Monday
+        games are listed. They all go into one parlay. {submitted}/{teams.length}{' '}
+        teams in.
       </p>
 
       <PickForm teams={teams} picks={picks} locked={isLocked()} />

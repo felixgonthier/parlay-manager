@@ -14,32 +14,43 @@ export async function POST(request) {
     return Response.json({ error: 'Missing team' }, { status: 400 });
   }
 
-  const state = await getState();
+  try {
+    const state = await getState();
 
-  if (!playerId) {
-    await clearPick(state.season, state.week, rosterId);
+    if (!playerId) {
+      await clearPick(state.season, state.week, rosterId);
+      const picks = await getPicks(state.season, state.week);
+      return Response.json({ ok: true, picks });
+    }
+
+    const teams = await getLeagueTeams(state);
+    const team = teams.find((t) => String(t.rosterId) === String(rosterId));
+    const player = team?.players.find((p) => p.id === String(playerId));
+    if (!player) {
+      return Response.json(
+        { error: 'That player is not on that roster' },
+        { status: 400 }
+      );
+    }
+
+    await setPick(state.season, state.week, rosterId, {
+      playerId: player.id,
+      playerName: player.name,
+      position: player.position,
+      nflTeam: player.team,
+      teamName: team.teamName,
+      owner: team.owner,
+      source: 'admin',
+      submittedAt: new Date().toISOString(),
+    });
+
     const picks = await getPicks(state.season, state.week);
     return Response.json({ ok: true, picks });
+  } catch (err) {
+    console.error('admin pick failed', err);
+    return Response.json(
+      { error: `Could not save: ${err.message}` },
+      { status: 500 }
+    );
   }
-
-  const teams = await getLeagueTeams(state);
-  const team = teams.find((t) => String(t.rosterId) === String(rosterId));
-  const player = team?.players.find((p) => p.id === String(playerId));
-  if (!player) {
-    return Response.json({ error: 'That player is not on that roster' }, { status: 400 });
-  }
-
-  await setPick(state.season, state.week, rosterId, {
-    playerId: player.id,
-    playerName: player.name,
-    position: player.position,
-    nflTeam: player.team,
-    teamName: team.teamName,
-    owner: team.owner,
-    source: 'admin',
-    submittedAt: new Date().toISOString(),
-  });
-
-  const picks = await getPicks(state.season, state.week);
-  return Response.json({ ok: true, picks });
 }

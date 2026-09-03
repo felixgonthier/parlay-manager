@@ -27,13 +27,13 @@ export default async function Admin() {
   const withSuggestions = teams.map((t) => ({ ...t, suggested: suggestPick(t) }));
 
   return (
-    <>
+    <div className="admin-wide">
       <h1>Week {state.week} admin</h1>
       <AdminTable teams={withSuggestions} picks={picks} />
       <p className="sub" style={{ marginTop: 24 }}>
         Picks are {isLocked() ? 'locked' : 'open'} for the league. Your overrides here
         work either way.
       </p>
-    </>
+    </div>
   );
 }

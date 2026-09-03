@@ -17,10 +17,11 @@ Eligible players are QB, RB, WR and TE — QBs are included because a QB rushing
 TD is a real anytime-TD market. The dropdown groups them by position, starters
 first, and shows each player's matchup.
 
-Only players in **Sunday** games are listed, so byes and Thu/Sat/Mon games are
-filtered out and every leg is still live when you place the parlay Sunday
-morning. If Sleeper's schedule endpoint ever fails, the filter is skipped and
-all players are shown rather than an empty dropdown.
+Only players in the **Sunday and Monday** games are listed, so byes and
+Wed/Thu/Fri/Sat games are filtered out. Monday games are tagged `· Mon` in the
+dropdown so you know that leg runs a day late. If Sleeper's schedule endpoint
+ever fails, the filter is skipped and all players are shown rather than an
+empty dropdown.
 
 ## Deploy on Vercel
 
@@ -62,11 +63,11 @@ only bet real submissions). Overrides work even when picks are locked.
 ## How it works
 
 - `lib/sleeper.js` — Sleeper API calls. The ~5MB player dump is trimmed to
-  QB/RB/WR/TE and cached in Redis for 24h. `getSundayOpponents()` reads
+  QB/RB/WR/TE and cached in Redis for 24h. `getSlateOpponents()` reads
   `api.sleeper.app/schedule/nfl/regular/<season>` (outside `/v1`; its dates are
   already US-local, so a Sunday nighter reads as Sunday) and is cached 6h.
   `suggestPick()` is the fallback: the team's best-ranked starting RB/WR/TE
-  that is playing Sunday.
+  that is on the slate.
 - `lib/store.js` — one Redis hash per week (`picks:<season>:<week>`), keyed by
   Sleeper roster id, so re-submitting just overwrites.
 - `lib/auth.js` — one shared admin password in a cookie. Owners need no login;

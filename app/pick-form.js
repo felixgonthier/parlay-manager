@@ -110,7 +110,7 @@ export default function PickForm({ teams, picks: initialPicks, locked }) {
       <label htmlFor="player">Player to score an anytime TD</label>
       {team && !groups.length ? (
         <div className="msg err">
-          None of your players are on the Sunday slate this week.
+          None of your players are in the Sunday or Monday games this week.
         </div>
       ) : null}
       <select

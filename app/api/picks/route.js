@@ -4,10 +4,6 @@ import { getPicks, setPick } from '@/lib/store';
 // Open to anyone with the link — owners identify themselves by choosing
 // their team. No password.
 export async function POST(request) {
-  if (isLocked()) {
-    return Response.json({ error: 'Picks are locked for this week' }, { status: 403 });
-  }
-
   const { rosterId, playerId } = await request.json().catch(() => ({}));
   if (!rosterId || !playerId) {
     return Response.json({ error: 'Pick a team and a player' }, { status: 400 });
@@ -15,6 +11,14 @@ export async function POST(request) {
 
   try {
     const state = await getState();
+
+    if (await isLocked(state)) {
+      return Response.json(
+        { error: 'Picks are locked for this week' },
+        { status: 403 }
+      );
+    }
+
     const teams = await getLeagueTeams(state);
     const team = teams.find((t) => String(t.rosterId) === String(rosterId));
     const player = team?.players.find((p) => p.id === String(playerId));

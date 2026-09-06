@@ -6,9 +6,10 @@ export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   const state = await getState();
-  const [teams, picks] = await Promise.all([
+  const [teams, picks, locked] = await Promise.all([
     getLeagueTeams(state),
     getPicks(state.season, state.week),
+    isLocked(state),
   ]);
 
   const submitted = Object.keys(picks).length;
@@ -23,7 +24,7 @@ export default async function Home() {
         teams in.
       </p>
 
-      <PickForm teams={teams} picks={picks} locked={isLocked()} />
+      <PickForm teams={teams} picks={picks} locked={locked} />
 
       <h2>Picks so far</h2>
       <table>

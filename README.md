@@ -23,6 +23,11 @@ dropdown so you know that leg runs a day late. If Sleeper's schedule endpoint
 ever fails, the filter is skipped and all players are shown rather than an
 empty dropdown.
 
+Picks close at that hour on **the Sunday of the current week's slate**, read
+from the schedule — not on every Sunday, which would lock the app during the
+preseason and on any Sunday the league isn't playing. They reopen when Sleeper
+rolls the week over, usually Tuesday. No schedule, no lock.
+
 ## Deploy on Vercel
 
 1. **Storage → Create Database** on the Vercel project, pick any Redis (Redis
@@ -34,7 +39,7 @@ empty dropdown.
    | --- | --- |
    | `SLEEPER_LEAGUE_ID` | `1389734249816428544` |
    | `ADMIN_PASSWORD` | only you know this; it unlocks `/admin` |
-   | `LOCK_SUNDAY_HOUR_ET` | optional, e.g. `13` — picks close Sunday 1pm ET |
+   | `LOCK_SUNDAY_HOUR_ET` | optional, e.g. `13` — picks close 1pm ET on the Sunday that week's games are played |
 
    `REDIS_URL` comes from step 1 — don't set it by hand.
 

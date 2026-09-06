@@ -18,9 +18,10 @@ export default async function Admin() {
   }
 
   const state = await getState();
-  const [teams, picks] = await Promise.all([
+  const [teams, picks, locked] = await Promise.all([
     getLeagueTeams(state),
     getPicks(state.season, state.week),
+    isLocked(state),
   ]);
 
   // suggestPick lives server-side, so resolve the fallback here.
@@ -31,7 +32,7 @@ export default async function Admin() {
       <h1>Week {state.week} admin</h1>
       <AdminTable teams={withSuggestions} picks={picks} />
       <p className="sub" style={{ marginTop: 24 }}>
-        Picks are {isLocked() ? 'locked' : 'open'} for the league. Your overrides here
+        Picks are {locked ? 'locked' : 'open'} for the league. Your overrides here
         work either way.
       </p>
     </div>
